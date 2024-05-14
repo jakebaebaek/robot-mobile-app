@@ -1,12 +1,15 @@
-import 'dart:developer';
-import 'dart:io';
+import 'dart:html';
+
 import 'package:dartros/dartros.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:lorobot_app/utils/deviceInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lorobot_app/utils/ros.dart';
 import 'package:lorobot_app/utils/constants.dart';
+import 'package:lorobot_app/widgets/settings/IPInputFeild.dart';
+import 'package:lorobot_app/utils/Connection.dart';
 
 enum WhenObstacleDetects {avoid, stop}
 
@@ -21,8 +24,10 @@ class _NetworkWidget extends State<NetworkWidget>{
   final rmsKey = GlobalKey(debugLabel: 'network_rms');
   final rmsTxtKey = GlobalKey(debugLabel: 'network_rms_text');
   final String initialTextValue = '';
-  late TextEditingController _textEditingController;
-  late String _oldText;
+  late TextEditingController _textEditingControllerCurrent = TextEditingController();
+  late TextEditingController _textEditingControllerHibot = TextEditingController();
+  late String _oldTextCurrent;
+  late String _oldTextHibot;
   late Text? _alertTexts;
   bool _exceed = false;
   static const ipPattern = r'\d[0-9.]+\d';
@@ -31,14 +36,17 @@ class _NetworkWidget extends State<NetworkWidget>{
   @override
   void initState(){
     super.initState();
-    _textEditingController = TextEditingController(text: initialTextValue);
-    _oldText = initialTextValue;
+    _textEditingControllerCurrent = TextEditingController(text: initialTextValue);
+    _textEditingControllerHibot = TextEditingController(text: initialTextValue);
+    _oldTextCurrent = initialTextValue; // Current IP용 별도의 상태
+    _oldTextHibot = initialTextValue;  // Hibot IP용 별도의 상태
     _alertTexts = const Text('');
   }
 
   @override
-  void dispose(){
-    _textEditingController.dispose();
+  void dispose() {
+    _textEditingControllerCurrent.dispose();
+    _textEditingControllerHibot.dispose();
     super.dispose();
   }
 
@@ -46,111 +54,88 @@ class _NetworkWidget extends State<NetworkWidget>{
     node = await initNode(defaultNodeName, [], rosMasterUri: uri);
   }
 
-  void _connectRMS([String? rTxt]){
-    var wdt = toString();
-    var txt = rTxt ?? _textEditingController.text;
-    // log(txt);
-    // for(var matched in regexp.allMatches(txt)){
-    //   log('$wdt got groupt ${matched.groupCount}');
-    //   log('$wdt matched ${matched[0]}');  
-    // }
-    // rh = RosHandler.withUri(defaultNodeName, 'http://$txt:11311/', []);
-    _connectRos('http://$txt:11311/');
-  }
 
-  void _formattingIP(String txt){
-    final TextSelection previousCursorPos = _textEditingController.selection;
+  void _formattingIP(String txt, TextEditingController controller, String oldText, Function(String) updateOldText) {
+    final TextSelection previousCursorPos = controller.selection;
     List<String> splittedTxt = txt.split('.');
-    List txtSublist = [];
+    List<String> txtSublist = [];
     _exceed = false;
-    sysLog.d(splittedTxt.toString());
-    _alertTexts = null;
 
-    if(_oldText.length < txt.length){
+    if(oldText.length < txt.length) {
       String res = '';
-      int index = 0;
-      for(String spspTxt in splittedTxt){
-        int? value = int.tryParse(spspTxt) ?? -1;
-        int value1 = value ~/ 10;
-        bool checked = false;
-        if(value > 255){
+      for (int index = 0; index < splittedTxt.length; index++) {
+        int? value = int.tryParse(splittedTxt[index]) ?? -1;
+        if (value > 255) {
           _exceed = true;
           break;
         }
-        if (((value1 < 10) && (value1 > 2)) || (value1 > 9)) checked = true;
-        if(index < splittedTxt.length){
-          txtSublist = splittedTxt.length > 1 ? 
-                    List.from(splittedTxt.sublist(0, index+1)) 
-                    : List.from(splittedTxt);
-          // log('1 txtSublist is ${txtSublist}');
-          if(checked) txtSublist.add('');
+        txtSublist.add(splittedTxt[index]);
+        if (index < splittedTxt.length - 1) {
+          txtSublist.add('.');
         }
-        res = txtSublist.join('.');
-        index += 1;
       }
-      // log('2 txtSublist is ${txtSublist}');
-      // log('splittedTxt length is ${splittedTxt.length}');
-      if('.'.allMatches(res).length > 3){
-        int a = res.lastIndexOf('.');
-        res = res.substring(0, a);
+      res = txtSublist.join('');
+      if ('.'.allMatches(res).length > 3) {
+        int lastDotIndex = res.lastIndexOf('.');
+        res = res.substring(0, lastDotIndex);
       }
-      _textEditingController.text = res;
+      controller.text = res;
+      updateOldText(res);  // Update the old text state
     }
-    _oldText = _textEditingController.text;
-    _textEditingController.selection = previousCursorPos;
-    setState(() {
-      
-    });
+    controller.selection = previousCursorPos;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context){
     var devInfo = DeviceInfo(context: context);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        buildSectionEnterIP(),
-        
-      ]
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: buildSectionEnterIP(),
     );
   }
 
   Widget buildSectionEnterIP(){
-    return Container(
+    return SingleChildScrollView(
       key: rmsKey,
-      child: Flexible(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column (
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: SizedBox(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Please write a IP address to connect",
-                    hintMaxLines: 1,
-                    errorText: _exceed ? "Please check again" : null,
+             Column(
+                children: [
+                  IPInputField(
+                    exceed: _exceed,
+                    rmsTxtKey: ValueKey('currentIpField'),
+                    textEditingController: _textEditingControllerCurrent,
+                    formattingIP: (text) => _formattingIP(text, _textEditingControllerCurrent, _oldTextCurrent, (val) => setState(() => _oldTextCurrent = val)),
+                    TextonTop: 'Current IP address',
                   ),
-                  key: rmsTxtKey,
-                  // textAlign: TextAlign.center,
-                  keyboardType: const TextInputType.numberWithOptions(),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
-                  ],
-                  controller: _textEditingController,
-                  onChanged: _formattingIP,
-                ),
+                  Padding(padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+                    child: IPInputField(
+                      exceed: _exceed,
+                      rmsTxtKey: ValueKey('hibotIpField'),
+                      textEditingController: _textEditingControllerHibot,
+                      formattingIP: (text) => _formattingIP(text, _textEditingControllerHibot, _oldTextHibot, (val) => setState(() => _oldTextHibot = val)),
+                      TextonTop: 'HIBOT IP address',
+                    ),
+                  ),
+                  Padding(padding: const EdgeInsets.fromLTRB(0, 60, 0, 40),
+                      child:Text(
+                        textAlign: TextAlign.center,
+                        "NOT Connected",
+                        style: TextStyle(
+                          fontSize: 40
+                        ),
+                      )
+                  ),
+                  Padding(padding: const EdgeInsets.all(3.0),
+                    child: ConnectionWidget(),
+                  )
+                ],
               ),
-            ),
-            Expanded(
-              child: OutlinedButton(
-                onPressed: _connectRMS,
-                child: const Text('Connect to RMS'),
-              ),
-            ),
           ],
         ),
-      ),
-    );
+      );
   }
 }

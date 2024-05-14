@@ -33,7 +33,7 @@ class _PointsTableWidgetState extends State<PointsTableWidget> {
                 (index) {
               return TableRow(
                 decoration: BoxDecoration(
-                  color: selectedRowIndex == index ? Colors.blue : Colors.transparent,  // 선택된 행의 색상 변경
+                  color: selectedRowIndex == index ? Colors.purple[50] : Colors.transparent,  // 선택된 행의 색상 변경
                 ),
                 children: [
                   TableCell(

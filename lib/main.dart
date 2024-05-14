@@ -15,13 +15,11 @@ void main() {
 class LorobotApp extends StatelessWidget {
   const LorobotApp({Key? key}) : super(key: key);
 
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(brightness:  Brightness.light),
+      theme: ThemeData(brightness: Brightness.light),
       home: const MainPage(),
     );
   }
@@ -29,50 +27,51 @@ class LorobotApp extends StatelessWidget {
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
+
   @override
-  State<MainPage> createState() => _LorobotApp();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _LorobotApp extends State<MainPage> {
+class _MainPageState extends State<MainPage> {
   int _gIndex = 0;
 
-  void onTapNavBar(int index){
-    setState(() {
-      _gIndex = index;
-    });
+  void onTapNavBar(int index) {
+    if (_gIndex != index) {
+      setState(() => _gIndex = index);
+    }
   }
 
   @override
-  Widget build(BuildContext context){
-    DeviceInfo devinfo = DeviceInfo(context: context);
+  Widget build(BuildContext context) {
+    DeviceInfo devinfo = DeviceInfo(context: context); // 여기서 context를 전달하여 초기화
     double h = devinfo.height;
     double w = devinfo.width;
     double pr = devinfo.pixelRatio;
-    // sysLog.d('DeviceInformation Height $h');
-    // sysLog.d('DeviceInformation Width $w');
-    // sysLog.d('DeviceInformation pixel ratio $pr');
-    // sysLog.d('DeviceInformation prHeight ${h*pr}');
-    // sysLog.d('DeviceInformation prWidth ${w*pr}');
-    //TODO pixel ratio * (height || width) 를 기준으로 ui 배치하기.
+
     final List<BottomNavigationBarItem> navBarItems = [
       const BottomNavigationBarItem(icon: Icon(CupertinoIcons.game_controller), label: 'Control'),
-      // arrow_2_squarepath
       const BottomNavigationBarItem(icon: Icon(Icons.checklist), label: 'Operating'),
       const BottomNavigationBarItem(icon: Icon(CupertinoIcons.settings), label: 'Settings'),
     ];
+
     final List<Widget> screens = [const ControlsWidget(), const TasksWidget(), const SettingsWidget()];
 
     return Scaffold(
-      appBar: AppBar(title: Text(navBarItems.elementAt(_gIndex).label.toString())),
-      body: screens[_gIndex],
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(40.0),
+        child: AppBar(title: Text(navBarItems[_gIndex].label.toString())),
+      ),
+      body: IndexedStack(
+        index: _gIndex,
+        children: screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: navBarItems,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
-        useLegacyColorScheme: false,
         currentIndex: _gIndex,
         onTap: onTapNavBar,
-      )
+      ),
     );
   }
 }

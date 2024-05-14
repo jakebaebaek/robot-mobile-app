@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dartros/dartros.dart';
+import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:geometry_msgs/msgs.dart';
 
 import 'package:lorobot_app/assets/joystickWgt.dart';
+import 'package:lorobot_app/assets/slider/sliderWgt.dart';
 import 'package:lorobot_app/utils/constants.dart';
 import 'package:lorobot_app/utils/ros.dart';
 
@@ -16,7 +18,7 @@ class ControlsWidget extends StatefulWidget {
 
   @override
   _ControlsWidget createState() => _ControlsWidget();
-  
+
 }
 
 class _ControlsWidget extends State<ControlsWidget>{
@@ -60,12 +62,39 @@ class _ControlsWidget extends State<ControlsWidget>{
 
   @override
   Widget build(BuildContext context){
-    return Stack(
-        children: [
-          const Image(image: AssetImage('lib/assets/images/occumap.png'),),
-          JoyStick(listener: stickCallback,),
-          Text("Current $_pos"),
-        ],
+    return Scaffold (
+      body: Container(
+        alignment: Alignment.center,
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height*0.45,
+              child : const Image(image: AssetImage('lib/assets/images/occumap.png'))
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width*0.8,
+              height: 50,
+              child: const SliderExample(),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child:  SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 197,
+                child : JoyStick(listener: stickCallback),
+              ),
+            )
+          ], // Children
+        ),
+      ),
     );
   }
 }
