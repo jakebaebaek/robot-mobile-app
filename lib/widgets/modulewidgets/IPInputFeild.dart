@@ -7,6 +7,7 @@ class IPInputField extends StatelessWidget {
   final TextEditingController textEditingController;
   final Function(String) formattingIP;
   final String TextonTop;
+  final Function(String) onChanged; // 콜백 함수 추가
 
   IPInputField({
     required this.exceed,
@@ -14,6 +15,7 @@ class IPInputField extends StatelessWidget {
     required this.textEditingController,
     required this.formattingIP,
     required this.TextonTop,
+    required this.onChanged,
   });
 
   @override
@@ -34,7 +36,10 @@ class IPInputField extends StatelessWidget {
             FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
           ],
           controller: textEditingController,
-          onChanged: formattingIP,
+          onChanged: (value) {
+            formattingIP(value);
+            onChanged(value); // 입력된 값을 콜백 함수로 전달
+          },
         ),
       ],
     );

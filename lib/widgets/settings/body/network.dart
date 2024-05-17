@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:dartros/dartros.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -8,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lorobot_app/utils/ros.dart';
 import 'package:lorobot_app/utils/constants.dart';
-import 'package:lorobot_app/widgets/settings/IPInputFeild.dart';
-import 'package:lorobot_app/utils/Connection.dart';
+import 'package:lorobot_app/widgets/modulewidgets/IPInputFeild.dart';
+import 'package:lorobot_app/utils/connection.dart';
+import 'package:lorobot_app/widgets/modulewidgets/underlinedButton.dart';
 
 enum WhenObstacleDetects {avoid, stop}
 
@@ -24,20 +23,22 @@ class _NetworkWidget extends State<NetworkWidget>{
   final rmsKey = GlobalKey(debugLabel: 'network_rms');
   final rmsTxtKey = GlobalKey(debugLabel: 'network_rms_text');
   final String initialTextValue = '';
-  late TextEditingController _textEditingControllerCurrent = TextEditingController();
-  late TextEditingController _textEditingControllerHibot = TextEditingController();
+  late TextEditingController _deviceIPController;
+  late TextEditingController _robotIPController;
   late String _oldTextCurrent;
   late String _oldTextHibot;
   late Text? _alertTexts;
   bool _exceed = false;
   static const ipPattern = r'\d[0-9.]+\d';
   final regexp = RegExp(ipPattern);
+  String deviceIP = '';
+  String robotIP = '';
 
   @override
   void initState(){
     super.initState();
-    _textEditingControllerCurrent = TextEditingController(text: initialTextValue);
-    _textEditingControllerHibot = TextEditingController(text: initialTextValue);
+    _deviceIPController  = TextEditingController(text: initialTextValue);
+    _robotIPController  = TextEditingController(text: initialTextValue);
     _oldTextCurrent = initialTextValue; // Current IP용 별도의 상태
     _oldTextHibot = initialTextValue;  // Hibot IP용 별도의 상태
     _alertTexts = const Text('');
@@ -45,8 +46,8 @@ class _NetworkWidget extends State<NetworkWidget>{
 
   @override
   void dispose() {
-    _textEditingControllerCurrent.dispose();
-    _textEditingControllerHibot.dispose();
+    _deviceIPController.dispose();
+    _robotIPController.dispose();
     super.dispose();
   }
 
@@ -107,30 +108,40 @@ class _NetworkWidget extends State<NetworkWidget>{
                   IPInputField(
                     exceed: _exceed,
                     rmsTxtKey: ValueKey('currentIpField'),
-                    textEditingController: _textEditingControllerCurrent,
-                    formattingIP: (text) => _formattingIP(text, _textEditingControllerCurrent, _oldTextCurrent, (val) => setState(() => _oldTextCurrent = val)),
+                    textEditingController: _deviceIPController,
+                    formattingIP: (text) => _formattingIP(text, _deviceIPController, _oldTextCurrent, (val) => setState(() => _oldTextCurrent = val)),
                     TextonTop: 'Current IP address',
+                    onChanged: (value) {
+                      setState(() {
+                        deviceIP = value;
+                      });
+                    },
                   ),
                   Padding(padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                     child: IPInputField(
                       exceed: _exceed,
                       rmsTxtKey: ValueKey('hibotIpField'),
-                      textEditingController: _textEditingControllerHibot,
-                      formattingIP: (text) => _formattingIP(text, _textEditingControllerHibot, _oldTextHibot, (val) => setState(() => _oldTextHibot = val)),
+                      textEditingController: _robotIPController,
+                      formattingIP: (text) => _formattingIP(text, _robotIPController, _oldTextHibot, (val) => setState(() => _oldTextHibot = val)),
                       TextonTop: 'HIBOT IP address',
+                      onChanged: (value) {
+                        setState(() {
+                          robotIP = value;
+                        });
+                      },
                     ),
                   ),
                   Padding(padding: const EdgeInsets.fromLTRB(0, 60, 0, 40),
                       child:Text(
                         textAlign: TextAlign.center,
-                        "NOT Connected",
+                        'Connection Status : $_connectionStatus',
                         style: TextStyle(
                           fontSize: 40
                         ),
                       )
                   ),
                   Padding(padding: const EdgeInsets.all(3.0),
-                    child: ConnectionWidget(),
+                    child: UnderlinedBotton(deviceIP:deviceIP, robotIP:robotIP,),
                   )
                 ],
               ),
