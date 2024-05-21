@@ -6,15 +6,15 @@ class IPInputField extends StatelessWidget {
   final Key rmsTxtKey;
   final TextEditingController textEditingController;
   final Function(String) formattingIP;
-  final String TextonTop;
-  final Function(String) onChanged; // 콜백 함수 추가
+  final String textOnTop;
+  final ValueChanged<String> onChanged;
 
   IPInputField({
     required this.exceed,
     required this.rmsTxtKey,
     required this.textEditingController,
     required this.formattingIP,
-    required this.TextonTop,
+    required this.textOnTop,
     required this.onChanged,
   });
 
@@ -23,7 +23,7 @@ class IPInputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('$TextonTop'),
+        Text(textOnTop),
         TextFormField(
           decoration: InputDecoration(
             hintText: "Please write an IP address to connect",
@@ -31,14 +31,15 @@ class IPInputField extends StatelessWidget {
             errorText: exceed ? "Please check again" : null,
           ),
           key: rmsTxtKey,
-          keyboardType: const TextInputType.numberWithOptions(),
+          keyboardType: TextInputType.numberWithOptions(),
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
           ],
           controller: textEditingController,
           onChanged: (value) {
+            onChanged(value);
+            print(value);
             formattingIP(value);
-            onChanged(value); // 입력된 값을 콜백 함수로 전달
           },
         ),
       ],
