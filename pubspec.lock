@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.8"
+  dartros_msgs:
+    dependency: "direct main"
+    description:
+      name: dartros_msgs
+      sha256: "49c4d0b8a6a7a07bdc38d350f65172ac4b9ba4c6994c1b1145ce03e0fb430883"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   dartros_msgutils:
     dependency: transitive
     description:

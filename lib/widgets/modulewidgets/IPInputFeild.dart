@@ -38,7 +38,6 @@ class IPInputField extends StatelessWidget {
           controller: textEditingController,
           onChanged: (value) {
             onChanged(value);
-            print(value);
             formattingIP(value);
           },
         ),

@@ -7,11 +7,11 @@ import 'package:dartros/dartros.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:geometry_msgs/msgs.dart';
 
-import 'package:lorobot_app/assets/joystickWgt.dart';
+import 'package:lorobot_app/assets/joystickWgt.dart' ;
 import 'package:lorobot_app/assets/slider/sliderWgt.dart';
 import 'package:lorobot_app/utils/constants.dart';
 import 'package:lorobot_app/utils/ros.dart';
-
+import 'dart:typed_data';
 
 class ControlsWidget extends StatefulWidget {
   const ControlsWidget({super.key});
@@ -59,7 +59,24 @@ class _ControlsWidget extends State<ControlsWidget>{
       isTapped = false;
     });
   }
-
+  void callbackListener(double x, double y, double rad){
+    setState((){
+      // print('x = $x, y = $y, rad = $rad');
+    });
+  }
+  // void onTapCallback(TapUpDetails? details){
+  //   if(details != null){
+  //     var dx = details.localPosition.dx;
+  //     var dy = details.localPosition.dy;
+  //     PoseStamped goalPose = PoseStamped(pose: Pose(position: Point(x:dx, y:dy, z:0)));
+  //     print('${goalPose.pose.position.x}, ${goalPose.pose.position.y}, ${goalPose.pose.position.z}');
+  //     if(pubGoal != null && !(pubGoal!.isShutdown)){
+  //       pubGoal!.publish(goalPose);
+  //       //TODO position match with map on application, quaternion match.
+  //       // quarternion from current robot pose or direction...
+  //     }
+  //   }
+  // }
   @override
   Widget build(BuildContext context){
     return Scaffold (

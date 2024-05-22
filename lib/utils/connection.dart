@@ -8,7 +8,6 @@ class ConnectionService {
       onStatusChanged?.call('Device IP or Robot IP cannot be empty');
       return;
     }
-
     try {
       final nodeHandle = await initNode(
         'my_ros_node',
@@ -17,6 +16,8 @@ class ConnectionService {
       );
       // 연결 성공 시 알림
       print('연결 성공');
+      print(robotIp);
+      print(deviceIp);
       onStatusChanged?.call('Connected');
     } catch (e) {
       // 연결 실패 시 알림

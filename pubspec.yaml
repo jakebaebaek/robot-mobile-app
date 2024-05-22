@@ -38,6 +38,7 @@ dependencies:
   flutter_joystick: ^0.0.4
   path_provider: ^2.1.1
   dartros: ^0.1.8
+  dartros_msgs: ^0.0.1
   sensor_msgs: ^0.1.0
   std_msgs: ^0.1.0
   rosgraph_msgs: ^0.1.0
