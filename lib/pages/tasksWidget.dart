@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lorobot_app/widgets/tasks/testDelete.dart';
+import 'package:lorobot_app/pages/tasks/testDelete.dart';
 
 Widget buildVerticalTextButton(String text, Color backgroundColor, double width) {
   return ElevatedButton(

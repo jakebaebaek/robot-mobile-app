@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:developer';
 
-
-void callback(displaySize, physicalSize, height, width, pixelRatio, paddingTop) {
-  log('MEDIA VALUES : $displaySize $physicalSize $height $width $pixelRatio $paddingTop');
+void callback(
+    displaySize, physicalSize, height, width, pixelRatio, paddingTop) {
+  log('$displaySize $physicalSize $height $width $pixelRatio $paddingTop');
 }
 
-class DeviceInfo{
+class DeviceInfo {
   final BuildContext context;
   DeviceInfo({
     required this.context,
-    }
-  );
+  });
 
   late final Size _displaySize = MediaQuery.of(context).size;
   late final Size _physicalSize = View.of(context).physicalSize;
@@ -26,6 +25,4 @@ class DeviceInfo{
   double get width => _width;
   double get pixelRatio => _pixelRatio;
   double get paddingTop => _paddingTop;
-
-
 }

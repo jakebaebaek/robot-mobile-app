@@ -6,7 +6,7 @@ import 'package:dartros/dartros.dart';
 import 'package:dartros_msgs/geometry_msgs/msgs.dart';
 import 'package:dartros_msgs/nav_msgs/msgs.dart';
 
-import 'package:lorobot_app/utils/deviceinfo.dart';
+import 'package:lorobot_app/utils/device_info.dart';
 import 'package:lorobot_app/utils/ros.dart';
 
 
@@ -14,7 +14,7 @@ enum WheelDirections {lprp, lprm, lmrp, lmrm}
 enum WhenObstacleDetects {avoid, stop}
 
 String kVersion = '0.0.1+';
-String kModelName = 'Lorobot';
+String kModelName = 'HIBOT';
 String defaultNodeName = kModelName;
 log.Logger sysLog = log.Logger();
 RosHandler rh = RosHandler();

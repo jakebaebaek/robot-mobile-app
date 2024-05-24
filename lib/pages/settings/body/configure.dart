@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lorobot_app/assets/slider/sliderWgt.dart';
-import 'package:lorobot_app/widgets/modulewidgets/IPInputFeild.dart';
+import 'package:lorobot_app/pages/modulewidgets/IPInputFeild.dart';
 
 enum WhenObstacleDetects {avoid, stop}
 enum Examples {exam, ples}

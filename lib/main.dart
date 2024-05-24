@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lorobot_app/widgets/controlsWidget.dart';
-import 'package:lorobot_app/widgets/settingsWidget.dart';
-import 'package:lorobot_app/widgets/tasksWidget.dart';
-import 'package:lorobot_app/utils/deviceInfo.dart';
+import 'package:lorobot_app/pages/controlsWidget.dart';
+import 'package:lorobot_app/pages/settingsWidget.dart';
+import 'package:lorobot_app/pages/tasksWidget.dart';
+import 'package:lorobot_app/utils/device_info.dart';
 import 'package:lorobot_app/utils/constants.dart';
 
 void main() {

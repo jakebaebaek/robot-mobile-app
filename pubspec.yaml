@@ -41,8 +41,8 @@ dependencies:
   dartros_msgs: ^0.0.1
   sensor_msgs: ^0.1.0
   std_msgs: ^0.1.0
+  image: ^4.1.7
   rosgraph_msgs: ^0.1.0
-  geometry_msgs: ^0.1.0
   actionlib_msgs: ^0.1.0
 
 dev_dependencies:

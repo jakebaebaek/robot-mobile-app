@@ -1,4 +1,5 @@
 import 'package:dartros/dartros.dart';
+import 'package:lorobot_app/utils/constants.dart';
 
 class ConnectionService {
   Function(String)? onStatusChanged;
@@ -9,7 +10,7 @@ class ConnectionService {
       return;
     }
     try {
-      final nodeHandle = await initNode(
+       nodehandle = await initNode(
         'my_ros_node',
         [],
         rosMasterUri: 'http://$robotIp:11311',

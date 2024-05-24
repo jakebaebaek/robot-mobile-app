@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.0"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      sha256: "6bd38d335f0954f5fad9c79e614604fbf03a0e5b975923dd001b6ea965ef5b4b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.0"
   async:
     dependency: transitive
     description:
@@ -156,7 +164,7 @@ packages:
     source: hosted
     version: "2.4.1"
   geometry_msgs:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: geometry_msgs
       sha256: e2ecef3038b01b49686e8f43d2db99e57d4bd1b145fbff1ae6e9e17ef7308c31
@@ -179,6 +187,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  image:
+    dependency: "direct main"
+    description:
+      name: image
+      sha256: "2237616a36c0d69aef7549ab439b833fb7f9fb9fc861af2cc9ac3eedddd69ca8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
   json_annotation:
     dependency: transitive
     description:

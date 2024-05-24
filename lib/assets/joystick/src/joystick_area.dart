@@ -6,7 +6,7 @@ import 'joystick_stick.dart';
 import 'joystick_stick_offset_calculator.dart';
 
 /// Allow to place the joystick in any place where user click.
-/// Just need to place other widgets as child of [JoystickArea] widget.
+/// Just need to place other pages as child of [JoystickArea] widget.
 class JoystickArea extends StatefulWidget {
   /// The [child] contained by the joystick area.
   final Widget? child;

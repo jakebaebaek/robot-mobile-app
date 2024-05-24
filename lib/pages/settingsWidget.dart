@@ -2,10 +2,10 @@
 
   import 'package:flutter/cupertino.dart';
   import 'package:flutter/material.dart';
-  import 'package:lorobot_app/widgets/settings/body/configure.dart';
-  import 'package:lorobot_app/widgets/settings/body/information.dart';
-  import 'package:lorobot_app/widgets/settings/body/map.dart';
-  import 'package:lorobot_app/widgets/settings/body/network.dart';
+  import 'package:lorobot_app/pages/settings/body/configure.dart';
+  import 'package:lorobot_app/pages/settings/body/information.dart';
+  import 'package:lorobot_app/pages/settings/body/map.dart';
+  import 'package:lorobot_app/pages/settings/body/network.dart';
 
   class SettingsWidget extends StatefulWidget{
     const SettingsWidget({super.key});
